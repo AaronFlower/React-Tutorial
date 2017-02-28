@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React Tutorial</title>
+	<script src="./lib/js/react.js"></script>
+	<script src="./lib/js/react-dom.js"></script>
+	<script src="./lib/js/babel-core.browser.min.js"></script>
+	<style>
+		body {
+			width: 65%;
+			margin: auto;
+		}
+		.innerComponent, .anotherInnerComponent {
+			border: 1px solid red;
+			padding: 10px;
+			margin-left: 10px;
+		}
+		.middleComponent, .siblingComponent,
+		.aMiddleComponent, .aSiblingComponent{
+			border: 2px solid deepskyblue;
+			margin: 2px;
+			padding: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h2>React Without JSX is Crazy....</h2>
+	<p>
+		在对 React 进行 coding 时，不写 JSX 语法是 Frustrating 的。 特别当有组件需要嵌套时。每一层你可能都需要创建一个中间的 Component 来完成。
+	</p>
+	<p>
+		注意：继承 React.Component 的组件类，只是一个类的说明。在使用时需要用 React.createElement 来实例化。
+	</p>
+	<div id="content"></div>
+	<h2>引入 JSX 语法，消除嵌套组件多余的写法。</h2>
+	<p>
+		引入 JSX 语法，我们需要 babel 的支持。 引入 babel-core.browser.min.js 来进行编译 text/babel 中的 JS 代码。
+	</p>
+	<div id="app"></div>
+	<script>
+		/**
+		 * 直接用 ES6 语法来书写。不用 JSX 语法。
+		 */
+		class InnerComponent extends React.Component 
+		{
+			render () {
+				return React.createElement(
+					'h4', 
+					{ className: 'innerComponent'}, 
+					`Hello! I am a ${this.props.innerName}`
+				)
+			}
+		}
+
+		class MiddleComponent extends React.Component 
+		{
+			render () {
+				return React.createElement(
+					'div', 
+					{ className: 'middleComponent'}, 
+					'Middle Wrapper <<<<<',
+					React.createElement(InnerComponent, {innerName: 'Tricky'}),
+					'>>>>> Middle Wrapper'
+				)
+			}
+		}
+
+		class SiblingComponent extends React.Component 
+		{
+			render () {
+				return React.createElement(
+					'div', 
+					{ className: 'siblingComponent' }, 
+					'I am a sibling-component!'
+				)
+			}
+		}
+
+		class RootComponent extends React.Component 
+		{
+			render () {
+				return React.createElement(
+					'div', 
+					{}, 
+					React.createElement(MiddleComponent, null),
+					React.createElement(SiblingComponent, null)
+				)
+			}
+		}
+		ReactDOM.render(React.createElement(RootComponent, null), document.getElementById('content'))
+	</script>
+
+	<script type="text/babel">
+		class AInnerComponent extends React.Component 
+		{
+			render () {
+				return <h4 className="anotherInnerComponent">I am another inner {}!</h4>
+			}
+		}
+		class AMiddleComponent extends React.Component 
+		{
+			render () {
+				return (<div className="aMiddleComponent">
+					Another Midddle Wrapper ----- &lt;
+						<AInnerComponent />
+					&gt;----- Another Midddle Wrapper
+				</div>)
+			}
+		}
+		class ASiblingComponent extends React.Component 
+		{
+			render () {
+				return <div className="aSiblingComponent">
+					Another Sibling Component!
+				</div>
+			}
+		}
+
+		ReactDOM.render(
+			<div>
+				<AMiddleComponent />
+				<ASiblingComponent />
+			</div>,
+			document.getElementById('app')
+		)
+	</script>
+</body>
+</html>
