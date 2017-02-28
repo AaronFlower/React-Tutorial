@@ -1,1 +1,51 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React Tutorial</title>
+	<script src="./lib/js/react.js"></script>
+	<script src="./lib/js/react-dom.js"></script>
+	<!-- <script src="./lib/js/browser.min.js"></script> -->
+</head>
+<body>
+	<div id="content"></div>
+	<script>
+		/**
+		 * 直接用 ES6 语法来书写。不用 JSX 语法。
+		 */
+		class CommentBox extends React.Component 
+		{
+			render () {
+				return React.createElement('div', { className: 'commentBox'}, `Hello World! I am a ${this.props.componentName}`)
+			}
+		}
+
+		class CommentList extends React.Component 
+		{
+			render () {
+				return React.createElement('div', { className: 'commentList'}, 'Hello I am a commentList')
+			}
+		}
+
+		class CommentForm extends React.Component 
+		{
+			render () {
+				return React.createElement('div', { className: 'commentForm' }, 'Hello I am a commentForm')
+			}
+		}
+
+		class RootComponent extends React.Component 
+		{
+			render () {
+				return React.createElement(
+					'div', 
+					{}, 
+					React.createElement(CommentBox, {componentName: 'innerName'}),
+					React.createElement(CommentForm, null)
+				)
+			}
+		}
+		ReactDOM.render(React.createElement(RootComponent, null), document.getElementById('content'))
+	</script>
+</body>
+</html>
