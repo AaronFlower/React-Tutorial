@@ -4,7 +4,7 @@
   "description": "React tutorial by Aaron Flower",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo '\nTest get /api/comments\n'; curl http://localhost:3000/api/comments; echo '\n\nTest post /api/comments\n'; curl http://localhost:3000/api/comments -d author=Aaron -d text='Hello Aaron'"
   },
   "author": "",
   "license": "ISC",
