@@ -1,7 +1,3 @@
-var data = [
-  {id: 1, author: 'Easonzhan', text: 'We are not enough to getting older'},
-  {id: 2, author: 'Andrew Ng', text: 'Machine learning '}
-]
 var Comment = React.createClass({
   rawMarkup: function() {
     var md = new Remarkable();
@@ -37,7 +33,26 @@ var CommentList = React.createClass({
   }
 });
 
+var CommentBox = React.createClass({
+  // 组件初始化状态。
+  getInitialState () {
+    return {data: [
+      {id: 1, author: 'Easonzhan', text: 'We are not enough to getting older'},
+      {id: 2, author: 'Andrew Ng', text: 'Machine learning '}
+    ]}
+  },
+  render () {
+    return (
+      <div className="commentBox">
+        <h1>Comments</h1>
+        <CommentList data={this.state.data} />
+      </div>
+    )
+  }
+})
+
+
 ReactDOM.render(
-  <CommentList data={data} />,
+  <CommentBox />,
   document.getElementById('content')
 );
