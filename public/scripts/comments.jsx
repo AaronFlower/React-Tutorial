@@ -41,6 +41,19 @@ var CommentBox = React.createClass({
       {id: 2, author: 'Andrew Ng', text: 'Machine learning '}
     ]}
   },
+  // 组件挂载之前触发
+  componentDidMount () {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', '/api/comments')
+    xhr.onreadystatechange = function () {
+      if (xhr.status == 200 && xhr.readyState == 4) {
+        console.log(JSON.parse(xhr.responseText).concat())
+        console.log(this.setState)
+        this.setState({data: JSON.parse(xhr.responseText).concat()})
+      }
+    }.bind(this)
+    xhr.send()
+  },
   render () {
     return (
       <div className="commentBox">
