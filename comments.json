@@ -20,13 +20,11 @@
         "text": "*abc*"
     },
     {
-        "id": 1464988717637,
-        "author": "evil",
-        "text": "<a href=\"javascript:alert(1)\">alert(1)</a>"
-    },
-    {
         "id": 1488276102199,
         "author": "easonzhan",
         "text": "Hello Eason Post"
+    },
+    {
+        "id": 1488590450550
     }
 ]

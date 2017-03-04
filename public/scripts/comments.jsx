@@ -33,6 +33,49 @@ var CommentList = React.createClass({
   }
 });
 
+var CommentForm = React.createClass({
+  getInitialState () {
+    return {author: '', text: ''}
+  },
+  handleAuthorChange (e) {
+    this.setState({author: e.target.value})
+  },
+  handleTextChange (e) {
+    this.setState({text: e.target.value})
+  },
+  handleFormSubmit (e) {
+    e.preventDefault()
+    let text = this.state.text.trim()
+    let author = this.state.author.trim()
+    if (!text || !author) {
+      console.log('author and text cant not be empty!')
+      return
+    }
+    this.props.onCommentSubmit({author: author, text: text})
+    this.setState({author: '', text: ''})
+  },
+  render () {
+    return (
+      <form className="commentForm" onSubmit={this.handleFormSubmit}>
+        <input 
+          type="text" 
+          placeholder="Please input your name..." 
+          value={this.state.author}
+          onChange={this.handleAuthorChange}
+        />
+        <input 
+          type="text" 
+          placeholder="Please input your comment..." 
+          value={this.state.text}
+          onChange={this.handleTextChange}
+        />
+        <input type="submit" />
+        <p>{this.state.author} || {this.state.text}</p>
+      </form>
+    )
+  }
+})
+
 var CommentBox = React.createClass({
   // 组件初始化状态。
   getInitialState () {
@@ -41,24 +84,39 @@ var CommentBox = React.createClass({
       {id: 2, author: 'Andrew Ng', text: 'Machine learning '}
     ]}
   },
-  // 组件挂载之前触发
-  componentDidMount () {
+  handleCommentSubmit (data) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET', '/api/comments')
+    xhr.open('POST', this.props.url)
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        console.log('Add comment success')
+      }
+    }.bind(this)
+    xhr.send(data)
+  },
+  // 从服务器加载数据。
+  loadFromCommentsServer () {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', this.props.url)
     xhr.onreadystatechange = function () {
       if (xhr.status == 200 && xhr.readyState == 4) {
-        console.log(JSON.parse(xhr.responseText).concat())
-        console.log(this.setState)
-        this.setState({data: JSON.parse(xhr.responseText).concat()})
+        console.log(JSON.parse(xhr.responseText))
+        this.setState({data: JSON.parse(xhr.responseText)})
       }
     }.bind(this)
     xhr.send()
+  },
+  // 组件挂载之前触发
+  componentDidMount () {
+    this.loadFromCommentsServer()
+    setInterval(this.loadFromCommentsServer, this.props.pollInterval)
   },
   render () {
     return (
       <div className="commentBox">
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
+        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
       </div>
     )
   }
@@ -66,6 +124,6 @@ var CommentBox = React.createClass({
 
 
 ReactDOM.render(
-  <CommentBox />,
+  <CommentBox url="/api/comments" pollInterval={2000} />,
   document.getElementById('content')
 );
