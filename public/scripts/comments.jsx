@@ -87,12 +87,19 @@ var CommentBox = React.createClass({
   handleCommentSubmit (data) {
     let xhr = new XMLHttpRequest()
     xhr.open('POST', this.props.url)
+    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
         console.log('Add comment success')
       }
     }.bind(this)
-    xhr.send(data)
+    // let formData = new FormData()
+    // Object.keys(data).forEach((key) => {
+    //   formData.append(key, data[key])
+    // })
+    console.log(data)
+    xhr.send(JSON.stringify(data))
   },
   // 从服务器加载数据。
   loadFromCommentsServer () {
