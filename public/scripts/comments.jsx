@@ -84,27 +84,32 @@ var CommentBox = React.createClass({
       {id: 2, author: 'Andrew Ng', text: 'Machine learning '}
     ]}
   },
-  handleCommentSubmit (data) {
+  handleCommentSubmit (comment) {
+    let comments = this.state.data
+    comment.id = Date.now()
+    let newCommentsList = comments.concat([comment])
+    this.setState({data: newCommentsList})
     let xhr = new XMLHttpRequest()
     xhr.open('POST', this.props.url)
-    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8")
+    xhr.setRequestHeader("Cache-control", "no-cache")
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
         console.log('Add comment success')
       }
     }.bind(this)
-    // let formData = new FormData()
-    // Object.keys(data).forEach((key) => {
-    //   formData.append(key, data[key])
-    // })
-    console.log(data)
-    xhr.send(JSON.stringify(data))
+    xhr.onerror = function () {
+      console.log('Add comment failed')
+      this.setState({data: comments})
+    }.bind(this)
+    xhr.send(JSON.stringify(comment))
   },
   // 从服务器加载数据。
   loadFromCommentsServer () {
     let xhr = new XMLHttpRequest()
     xhr.open('GET', this.props.url)
+    xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8')
+    xhr.setRequestHeader('Cache-control', 'no-cache')
     xhr.onreadystatechange = function () {
       if (xhr.status == 200 && xhr.readyState == 4) {
         console.log(JSON.parse(xhr.responseText))
@@ -131,6 +136,6 @@ var CommentBox = React.createClass({
 
 
 ReactDOM.render(
-  <CommentBox url="/api/comments" pollInterval={2000} />,
+  <CommentBox url="/api/comments" pollInterval={5000} />,
   document.getElementById('content')
 );
