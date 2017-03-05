@@ -1,0 +1,37 @@
+.r-table {
+	border-spacing: 0;
+	line-height: 40px;
+}
+
+.r-table thead {
+	background: #12edb3;
+	color: #FFF;
+}
+
+.r-table tbody tr {
+	line-height: 32px;
+}
+
+.r-table thead th.small,
+.r-table tbody td.small
+{
+	width: 10%;
+	text-align: center;
+}
+
+.r-table thead th.middle,
+.r-table tbody td.middle
+ {
+	width: 20%;
+}
+
+.r-table thead th.large,
+.r-table tbody td.large
+{
+	width: 40%;
+}
+
+
+.r-table tbody tr:nth-child(odd) {
+	background: #ccc;
+}

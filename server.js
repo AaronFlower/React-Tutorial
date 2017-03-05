@@ -31,8 +31,14 @@ app.use(function (req, res, next) {
 	next()
 })
 
+var books = require('./services/books')
+app.use('/api', books)
+
+
 // RESTful API , get. 获取评论。
 app.get('/api/comments', function (req, res) {
+	console.log(req.get('Content-type'))
+	console.log(req.get('API-Version'))
 	fs.readFile(COMMENTS_FILE, function (err, data) {
 		if (err) {
 			console.error(err)
