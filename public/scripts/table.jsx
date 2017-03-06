@@ -1,4 +1,19 @@
 var TTable = React.createClass({
+	handleDeleteBook (e, id) {
+		e.preventDefault()
+		console.log('delete: ', id)
+		let xhr = new XMLHttpRequest()
+		xhr.open('DELETE', '/api/books/' + id)
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				console.log('Delete success')
+			}
+		}.bind(this)
+		xhr.onerror = function () {
+			console.log('Delete failed')
+		} 
+		xhr.send()
+	},
 	render () {
 		return (
 			<table className="r-table">
@@ -15,11 +30,15 @@ var TTable = React.createClass({
 				  		<tr key={row.id}>
 				  			{
 				  				this.props.cols.map(col => {
-				  					return (
-				  						<td className={col.className} key={col.key + row.id}>
-				  							{row[col.key]}
-				  						</td>
-				  					)
+				  						if (row[col.key]) {
+					  						return (<td className={col.className} key={col.key + row.id}>
+					  							{row[col.key]}
+					  						</td>)
+				  						} else {
+				  							return (<td key={'operation' + row.id}>
+				  								<a href="#" onClick={(e) => this.handleDeleteBook(e, row.id)}>删除</a>
+				  							</td>)
+				  						}
 				  				})
 				  			}
 				  		</tr>
@@ -55,12 +74,17 @@ var BooksTable = React.createClass({
 					key: 'abstract',
 					name: 'Abstract',
 					className: 'large'
+				},
+				{
+					key: 'operation',
+					name: 'Operation',
+					className: 'middle'
 				}
 			],
 			data: []
 		}
 	},
-	componentDidMount () {
+	loadBooksData () {
 		let xhr = new XMLHttpRequest()
 		xhr.open('GET', '/api/books')
 		xhr.setRequestHeader('Content-type', 'application/json')
@@ -73,6 +97,10 @@ var BooksTable = React.createClass({
 			console.log('Can not load books info!')
 		}.bind(this)
 		xhr.send()
+	},
+	componentDidMount () {
+		this.loadBooksData()
+		setInterval(this.loadBooksData, 2000)
 	},
 	render () {
 		return (

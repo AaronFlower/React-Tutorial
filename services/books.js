@@ -37,6 +37,28 @@ router.get('/books/:id', function (req, res) {
 	})
 })
 
+router.delete('/books/:id', function (req, res) {
+	console.log('delete')
+	let id = req.params.id
+	fs.readFile(BOOKS_FILE_PATH, function (err, data) {
+		if (err) {
+			console.error(err)
+			res.send('Delete Book failed!')
+			process.exit(1)
+		}
+		let books = JSON.parse(data)
+		let newBooks = books.filter(book => book.id != id)
+		fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(newBooks, null, 4), function (err) {
+			if (err) {
+				console.error(err)
+				res.send('Delete Book failed')
+				process.exit(1)
+			}
+			res.send(null)
+		})
+	})
+})
+
 router.post('/books', function (req, res) {
 	console.log(req.body)
 	let newBook = {
